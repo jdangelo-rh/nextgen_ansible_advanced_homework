@@ -1,3 +1,71 @@
 ---
 
 # tasks file for osp.servers
+
+---
+- name: Create new server instances and attaches them a network and passes metadata to the instance
+  os_server:
+    cloud: openstack
+    name: "{{ instance.value.name }}"
+    state: "{{ instance.value.state }}"
+    image: "{{ instance.value.image }}"
+    meta: "group={{ instance.value.meta[0].group }},deployment_name={{ instance.value.meta[0].deployment_name }}"
+    flavor: "{{ instance.value.flavor }}"
+    security_groups: "{{ instance.value.security_group }}"
+    key_name: "{{ instance.value.key_name }}"
+    wait: yes
+    nics:
+      - net-name: int_network
+    userdata: |
+      #!/bin/bash
+      curl -o /tmp/openstack.pub http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
+      cat /tmp/openstack.pub >> /home/cloud-user/.ssh/authorized_keys
+      curl -o /tmp/internal.repo http://www.opentlc.com/download/ansible_bootcamp/repo/internal.repo
+      cp /tmp/internal.repo /etc/yum.repos.d/internal.repo
+  loop:
+    "{{ lookup('dict', osp_servers) }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.value.name }}"
+  register: instanceip
+
+- name: Add floating IP to Servers
+  os_floating_ip:
+    cloud: openstack
+    state: "{{ instance.value.state }}"
+    reuse: yes
+    server: "{{ instance.value.name }}"
+    network: ext_network
+    wait: true
+    timeout: 180
+  loop:
+    "{{ lookup('dict', osp_servers) }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.value.name }}"
+  register: instancefloatingip
+
+- name: Show Servers public IP
+  debug: 
+    msg: >-
+      Server "{{ instance.instance.value.name }}", 
+      Floating IP: "{{ instance.floating_ip.floating_ip_address }}", 
+      Fixed IP: "{{ instance.floating_ip.fixed_ip_address }}"
+  loop:
+    "{{ instancefloatingip.results }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.instance.value.name }}"
+
+- name: Wait for server to be available
+  wait_for:
+    host: "{{ instance.floating_ip.floating_ip_address }}"
+    port: 22
+    search_regex: OpenSSH
+    timeout: 600
+  loop:
+    "{{ instancefloatingip.results }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.instance.value.name }}"
+#  delegate_to: "{{ instance.floating_ip.floating_ip_address }}"

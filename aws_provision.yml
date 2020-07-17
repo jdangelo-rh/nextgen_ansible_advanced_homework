@@ -1,7 +1,22 @@
 ---
+
+- hosts: localhost
+  vars:
+    OSP_GUID: "{{ lookup('env','OSP_GUID') }}"
+    OSP_DOMAIN: "{{ lookup('env','OSP_DOMAIN') }}"
+    OPENTLC_ID: "{{ lookup('env','OPENTLC_ID') }}"
+  tasks:
+  - name: Create workstation inventory
+    add_host:
+       name: "workstation-{{OSP_GUID}}.{{OSP_DOMAIN}}"
+       group: workstation
+       ansible_user: cloud-user
+
 - hosts: workstation
   become: true
   gather_facts: false
+  vars:
+    param_repo_base: http://www.opentlc.com/download/ansible_bootcamp
   tasks:
     - name: create bin directory
       file:
@@ -26,8 +41,8 @@
     - name: create credentials
       copy:
         content: |
-          export username={{ param_user }}
-          export password={{ param_password }}
+          export username={{ lookup('env','username') }}
+          export password={{ lookup('env','password') }}
           export uri=https://labs.opentlc.com
         dest: /root/credential.rc
         mode: 0755

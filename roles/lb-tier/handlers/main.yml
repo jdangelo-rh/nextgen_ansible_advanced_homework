@@ -1,7 +1,8 @@
 ---
 
-- name: start {{ payload }}
-  service:
-    name: tomcat
-    state: started
+# This handler makes sure that haproxy is restarted after configuration changes
 
+- name: restart haproxy
+  service:
+    name: "{{ payload }}"
+    state: restarted

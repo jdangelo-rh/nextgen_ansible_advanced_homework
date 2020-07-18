@@ -13,12 +13,12 @@
 
 - hosts: workstation
   become: yes
+  become_user: cloud-user
   gather_facts: true
-##  roles:
-##  - name: osp-facts
+  roles:
+  - name: osp-facts
 
 # Setup front-end load balancer tier
-
 
 - name: setup load-balancer tier
   hosts: frontends

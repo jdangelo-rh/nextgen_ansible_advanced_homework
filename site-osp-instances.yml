@@ -17,7 +17,6 @@
 
 - hosts: workstation
   become: yes
-  become_user = root
   roles:
     - osp-servers
 

@@ -14,8 +14,8 @@
 - hosts: workstation
   become: yes
   gather_facts: true
-  roles:
-  - name: osp-facts
+##  roles:
+##  - name: osp-facts
 
 # Setup front-end load balancer tier
 

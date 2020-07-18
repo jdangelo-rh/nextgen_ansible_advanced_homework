@@ -1,3 +1,17 @@
+
+- hosts: localhost
+  vars:
+    OSP_GUID: "{{ lookup('env','ANSIBLE_GUID') }}"
+    OSP_DOMAIN: "{{ lookup('env','ANSIBLE_DOMAIN') }}"
+    OPENTLC_ID: "{{ lookup('env','OPENTLC_ID') }}"
+  tasks:
+  - name: Create workstation inventory
+    add_host:
+       name: "bastion.{{OSP_GUID}}.{{OSP_DOMAIN}}"
+       group: tag_AnsibleGroup_bastions
+       ansible_ssh_user: root
+       ansible_ssh_private_key_file: ~/.ssh/openstack.pem
+
 - hosts: tag_AnsibleGroup_bastions
   gather_facts: true
   become: true
@@ -24,7 +38,7 @@
       organization: Default
       state: present
       kind: ssh
-      tower_host: tower1.{{tower_guid}}.example.opentlc.com
+      tower_host: "tower1.{{ lookup('env','tower_guid') }}.example.opentlc.com"
       tower_username: admin
       tower_password: r3dh4t1!
       tower_verify_ssl: no
@@ -34,7 +48,7 @@
     tower_job_template:
       name: "09_3 tier app on Prod"
       credential: "Creds for AWS instances"
-      tower_host: tower1.{{tower_guid}}.example.opentlc.com
+      tower_host: "tower1.{{ lookup('env','tower_guid') }}.example.opentlc.com"
       tower_username: admin
       tower_password: r3dh4t1!
       tower_verify_ssl: no
@@ -46,7 +60,7 @@
     tower_job_template:
       name: "10_Smoke test Prod env"
       credential: "Creds for AWS instances"
-      tower_host: tower1.{{tower_guid}}.example.opentlc.com
+      tower_host: "tower1.{{ lookup('env','tower_guid') }}.example.opentlc.com"
       tower_username: admin
       tower_password: r3dh4t1!
       tower_verify_ssl: no

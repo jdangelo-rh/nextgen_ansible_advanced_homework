@@ -1,6 +1,7 @@
 # Playbook to setup the OpenStack platform with the server instances required for the QA environment
 
 # This play uses the osp-servers role to create the server instances
+---
 
 - hosts: localhost
   vars:
@@ -16,5 +17,7 @@
 
 - hosts: workstation
   become: yes
+  become_user = root
   roles:
     - osp-servers
+

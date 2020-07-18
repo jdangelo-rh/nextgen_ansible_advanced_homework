@@ -9,6 +9,26 @@
     backup: yes
 
 - name: enable repos
+  yum_repository:
+    name: "{{ repo.name }}"
+    description: "{{ repo.description }}"
+    baseurl: "{{ repo.baseurl }}"
+    enabled: yes
+    gpgcheck: no
+    state: present
+  loop:
+    "{{ repos }}"
+  loop_control:
+    loop_var: repo
+
  
 - name: install base tools and packages
+  yum:
+    name: "{{ package }}"
+    state: latest
+  loop:
+    - httpie
+    - python-pip
+  loop_control:
+    loop_var: package
 

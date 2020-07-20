@@ -5,7 +5,7 @@
     ANSIBLE_DOMAIN: "{{ lookup('env','ANSIBLE_DOMAIN') }}"
     OPENTLC_ID: "{{ lookup('env','OPENTLC_ID') }}"
   tasks:
-  - name: Create workstation inventory
+  - name: Creds for AWS instances
     add_host:
        name: "bastion.{{ANSIBLE_GUID}}.{{ANSIBLE_DOMAIN}}"
        group: tag_AnsibleGroup_bastions

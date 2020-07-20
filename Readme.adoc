@@ -3,6 +3,8 @@
 
 * From the cloned repo run `site-config-tower.yml` playbook to create job templates and workflow template.
 
+[source,text]
+----
 [bastion]$ sudo -i
 [bastion]# cd ansible_advance_homework
 [bastion]# TOWER_GUID=<Ansible Tower Homework GUID from mail>
@@ -56,7 +58,7 @@ export MAIL_ID=
 export ANSIBLE_GUID=
 export ANSIBLE_DOMAIN=example.opentlc.com
 export tower_guid=
-
+----
 .List of Playbooks
 [%header,cols=2*]
 |===

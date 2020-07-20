@@ -46,18 +46,18 @@ Host 192.0.2.*
   ConnectionAttempts 10
   
 [root@bastion ~]# cat labrc 
-export OSP_GUID=
-export OPENTLC_ID=
+export OSP_GUID=<Openstack for Ansible GUID from mail>
+export OPENTLC_ID=<username-company.com>
 export OSP_DOMAIN=blue.osp.opentlc.com
-export TOWER_GUID=
-export OPENTLC_PASSWORD=
+export TOWER_GUID=<Ansible Tower Homework GUID from mail>
+export OPENTLC_PASSWORD=<your openlc account password>
 export GITHUB_REPO=https://github.com/jdangelo-rh/nextgen_ansible_advanced_homework.git
 export JQ_REPO_BASE=http://www.opentlc.com/download/ansible_bootcamp
 export REGION=us-east-1
-export MAIL_ID=
-export ANSIBLE_GUID=
+export MAIL_ID=<your mail id>
+export ANSIBLE_GUID=<  Ansible Advanced - Three Tier AppGUID from mail>
 export ANSIBLE_DOMAIN=example.opentlc.com
-export tower_guid=
+export tower_guid=<Ansible Tower Homework GUID from mail>
 ----
 .List of Playbooks
 [%header,cols=2*]

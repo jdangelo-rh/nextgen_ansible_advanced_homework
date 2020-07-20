@@ -3,7 +3,59 @@
 
 * From the cloned repo run `site-config-tower.yml` playbook to create job templates and workflow template.
 
+[bastion]$ sudo -i
+[bastion]# cd ansible_advance_homework
+[bastion]# TOWER_GUID=<Ansible Tower Homework GUID from mail>
+[bastion]# OSP_GUID=<Openstack for Ansible GUID from mail>
+[bastion]# OPENTLC_LOGIN=<username-company.com>
+[bastion]# OPENTLC_PASSWORD=<your openlc account password>
+[bastion]# GITHUB_REPO=https://github.com/<githubhandler>/ansible_advance_homework
+[bastion]# JQ_REPO_BASE=http://www.opentlc.com/download/ansible_bootcamp
+[bastion]# REGION=<enter region name example us-east-1>
+[bastion]# RH_MAIL_ID=<your mail id for dynamic inventory tag>
+[bastion]# ansible-playbook site-config-tower.yml -e tower_GUID=${TOWER_GUID} -e osp_GUID=${OSP_GUID} -e opentlc_login=${OPENTLC_LOGIN} -e path_to_opentlc_key=/root/.ssh/mykey.pem -e param_repo_base=${JQ_REPO_BASE} -e opentlc_password=${OPENTLC_PASSWORD} -e REGION_NAME=${REGION} -e EMAIL=${RH_MAIL_ID} -e github_repo=${GITHUB_REPO}
+[bastion]#cat ~/.ssh/config
+Host ec2* *.internal
+	
+  User ec2-user
+  IdentityFile ~/.ssh/a78bkey.pem
+  ForwardAgent yes
+  StrictHostKeyChecking no
+  ConnectTimeout 60
+  ConnectionAttempts 10
 
+Host workstation* 
+
+  User cloud-user
+  IdentityFile ~/.ssh/openstack.pem
+  ForwardAgent yes
+  StrictHostKeyChecking no
+  ConnectTimeout 60
+  ConnectionAttempts 10
+
+Host 192.0.2.* 
+
+  ProxyCommand ssh cloud-user@workstation-$OSP_GUID.$OSP_DOMAIN -W %h:%p
+  User cloud-user
+  IdentityFile ~/.ssh/openstack.pem
+  ForwardAgent yes
+  StrictHostKeyChecking no
+  ConnectTimeout 60
+  ConnectionAttempts 10
+  
+[root@bastion ~]# cat labrc 
+export OSP_GUID=
+export OPENTLC_ID=
+export OSP_DOMAIN=blue.osp.opentlc.com
+export TOWER_GUID=
+export OPENTLC_PASSWORD=
+export GITHUB_REPO=https://github.com/jdangelo-rh/nextgen_ansible_advanced_homework.git
+export JQ_REPO_BASE=http://www.opentlc.com/download/ansible_bootcamp
+export REGION=us-east-1
+export MAIL_ID=
+export ANSIBLE_GUID=
+export ANSIBLE_DOMAIN=example.opentlc.com
+export tower_guid=
 
 .List of Playbooks
 [%header,cols=2*]

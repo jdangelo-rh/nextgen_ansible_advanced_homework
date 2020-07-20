@@ -1,13 +1,13 @@
 
 - hosts: localhost
   vars:
-    OSP_GUID: "{{ lookup('env','ANSIBLE_GUID') }}"
-    OSP_DOMAIN: "{{ lookup('env','ANSIBLE_DOMAIN') }}"
+    ANSIBLE_GUID: "{{ lookup('env','ANSIBLE_GUID') }}"
+    ANSIBLE_DOMAIN: "{{ lookup('env','ANSIBLE_DOMAIN') }}"
     OPENTLC_ID: "{{ lookup('env','OPENTLC_ID') }}"
   tasks:
   - name: Create workstation inventory
     add_host:
-       name: "bastion.{{OSP_GUID}}.{{OSP_DOMAIN}}"
+       name: "bastion.{{ANSIBLE_GUID}}.{{ANSIBLE_DOMAIN}}"
        group: tag_AnsibleGroup_bastions
        ansible_ssh_user: root
        ansible_ssh_private_key_file: ~/.ssh/openstack.pem
